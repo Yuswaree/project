@@ -13,6 +13,12 @@ const char* ssid = "ModernFarm";
 const char* password = "Smart@Farm2565";
 const char* mqtt_server = "192.168.1.108";
 
+
+//relay
+int fan =  4;
+int light = 16;
+int pump = 17;
+
 WiFiClient espClient;
 PubSubClient client(espClient);
 
@@ -148,6 +154,14 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.print((char)payload[i]);
   }
   Serial.println();
+
+  if (strcmp(topic, "esp32/fan_control") == 0) {
+    digitalWrite(fan, payload[0] == '1' ? HIGH : LOW);
+  } else if (strcmp(topic, "esp32/light_control") == 0) {
+    digitalWrite(light, payload[0] == '1' ? HIGH : LOW);
+  } else if (strcmp(topic, "esp32/pump_control") == 0) {
+    digitalWrite(pump, payload[0] == '1' ? HIGH : LOW);
+  }
 }
 
 void reconnect() {
@@ -155,7 +169,10 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     if (client.connect("ESP32Client")) {
       Serial.println("connected");
-      client.subscribe("esp32/temperature");
+      client.subscribe("esp32/temperature"); // ติดตามการเผยแพร่อุณหภูมิผ่าน MQTT
+      client.subscribe("esp32/fan_control"); // ติดตามการควบคุมพัดลมผ่าน MQTT
+      client.subscribe("esp32/light_control"); // ติดตามการควบคุมไฟผ่าน MQTT
+      client.subscribe("esp32/pump_control"); // ติดตามการควบคุมปั๊มผ่าน MQTT
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -167,6 +184,9 @@ void reconnect() {
 
 void setup() {
   Serial.begin(115200);
+  pinMode(fan,OUTPUT);
+  pinMode(light,OUTPUT);
+  pinMode(pump,OUTPUT);
   pinMode(analogPin, INPUT);
   pinMode(TdsSensorPin, INPUT);
   pinMode(sensorPin, INPUT_PULLUP); // Assuming the sensor pulls the line low when a pulse is detected
@@ -184,6 +204,7 @@ void setup() {
 }
 
 void loop() {
+
   if (!client.connected()) {
     reconnect();
   }
