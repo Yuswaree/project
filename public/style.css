@@ -30,6 +30,9 @@ aside li{
   height: 180vh;
   overflow: auto;
 }
+aside {
+  background-color: #F5F5F5;
+}
 
 .switch {
   position: relative;

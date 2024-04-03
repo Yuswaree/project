@@ -3,7 +3,7 @@
 
 const char* ssid = "ModernFarm";
 const char* password = "Smart@Farm2565";
-const char* mqtt_server = "192.168.1.108";
+const char* mqtt_server = "192.168.1.105";
 
 WiFiClient espClient;
 PubSubClient client(espClient);

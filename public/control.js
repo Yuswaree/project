@@ -1,6 +1,6 @@
 var mqtt;
 var reconnectTimeout = 2000;
-var host = "192.168.1.108";  // IP address ของ MQTT broker
+var host = "172.20.10.11";  // IP address ของ MQTT broker
 var port = 1883;  // พอร์ตของ MQTT broker
 var fan_topic = "esp32/fan_control";  // ชื่อของ topic ที่ใช้ควบคุมรีเลย์พัดลม
 var light_topic = "esp32/light_control";  // ชื่อของ topic ที่ใช้ควบคุมรีเลย์ไฟ

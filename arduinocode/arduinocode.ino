@@ -9,9 +9,9 @@
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
-const char* ssid = "ModernFarm";
-const char* password = "Smart@Farm2565";
-const char* mqtt_server = "192.168.1.108";
+const char* ssid = "BEER_2.4G";
+const char* password = "beer2018";
+const char* mqtt_server = "192.168..112";
 
 
 //relay
@@ -243,6 +243,7 @@ void loop() {
   pulseCount = 0; // Reset the count
   attachInterrupt(digitalPinToInterrupt(sensorPin), pulseCounter, FALLING); // Re-enable interrupts
   float flowRate = pulses / 7.5; // Assuming 7.5 pulses per liter, adjust according to your sensor's specifications
+  
   Serial.print("Flow rate: ");
   Serial.print(flowRate);
   Serial.println(" L/min");
@@ -265,6 +266,7 @@ void loop() {
 
   int sensorValue = analogRead(A3);
   val = analogRead(analogPin); // Read analog value from LDR Photoresistor Sensor Module
+  
   Serial.print("ldrval = ");
   Serial.println(val);
   client.publish("esp32/ldr", String(val).c_str());

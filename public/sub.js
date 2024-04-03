@@ -3,7 +3,7 @@ var mqttData = {};
 
 function mqttConnect() {
   
-  var mqttServer = '192.168.1.108';
+  var mqttServer = '192.168.199.80';
   var mqttPort = 9001; 
   var clientId = 'web_' + parseInt(Math.random() * 100, 10);
 
