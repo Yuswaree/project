@@ -1,3 +1,7 @@
+#define BLYNK_TEMPLATE_ID "TMPL60VMq3AXH"
+#define BLYNK_TEMPLATE_NAME "proj"
+#define BLYNK_AUTH_TOKEN "Fhh5hoCb_iWpPRe1cFCu236J_NhaGEuA"
+#include <BlynkSimpleEsp32.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <WiFi.h>
@@ -9,9 +13,13 @@
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
-const char* ssid = "BEER_2.4G";
-const char* password = "beer2018";
-const char* mqtt_server = "192.168..112";
+
+
+char auth[] = "Fhh5hoCb_iWpPRe1cFCu236J_NhaGEuA";
+char ssid[] = "Redmi13C";
+char pass[] = "iml36912";
+
+
 
 
 //relay
@@ -127,60 +135,6 @@ void IRAM_ATTR pulseCounter() {
   pulseCount++;
 }
 
-void setup_wifi() {
-  delay(10);
-  Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
-
-  WiFi.begin(ssid, password);
-
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
-}
-
-void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println();
-
-  if (strcmp(topic, "esp32/fan_control") == 0) {
-    digitalWrite(fan, payload[0] == '1' ? HIGH : LOW);
-  } else if (strcmp(topic, "esp32/light_control") == 0) {
-    digitalWrite(light, payload[0] == '1' ? HIGH : LOW);
-  } else if (strcmp(topic, "esp32/pump_control") == 0) {
-    digitalWrite(pump, payload[0] == '1' ? HIGH : LOW);
-  }
-}
-
-void reconnect() {
-  while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
-    if (client.connect("ESP32Client")) {
-      Serial.println("connected");
-      client.subscribe("esp32/temperature"); // ติดตามการเผยแพร่อุณหภูมิผ่าน MQTT
-      client.subscribe("esp32/fan_control"); // ติดตามการควบคุมพัดลมผ่าน MQTT
-      client.subscribe("esp32/light_control"); // ติดตามการควบคุมไฟผ่าน MQTT
-      client.subscribe("esp32/pump_control"); // ติดตามการควบคุมปั๊มผ่าน MQTT
-    } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      delay(5000);
-    }
-  }
-}
 
 void setup() {
   Serial.begin(115200);
@@ -198,17 +152,12 @@ void setup() {
   // Signal end of setup() to tasks
   tasksEnabled = true;
 
-  setup_wifi();
-  client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
+  Blynk.begin(auth,ssid,pass);
 }
 
 void loop() {
 
-  if (!client.connected()) {
-    reconnect();
-  }
-  client.loop();
+   Blynk.run();
 
   static unsigned long analogSampleTimepoint = millis();
   if (millis() - analogSampleTimepoint > 40U) //every 40 milliseconds, read the analog value from the ADC
